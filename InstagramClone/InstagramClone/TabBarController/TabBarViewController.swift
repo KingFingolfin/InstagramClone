@@ -17,24 +17,24 @@ class TabBarViewController: UITabBarController {
 
     private func setupTabBar() {
 
-        let mainPageVC = UIViewController()
-        mainPageVC.view.backgroundColor = .white
+        let mainPageVC = MainPageViewController()
+        
         mainPageVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "homeIcon"), selectedImage: UIImage(named: "homeIcon"))
 
-        let searchPageVC = UIViewController()
-        searchPageVC.view.backgroundColor = .lightGray
+        let searchPageVC = SearchPageViewController()
+        
         searchPageVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "searchIcon"), selectedImage: UIImage(named: "searchIcon"))
 
         let createPostVC = UIViewController()
         createPostVC.view.backgroundColor = .cyan
         createPostVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "plusIcon"), selectedImage: UIImage(named: "plusIcon"))
 
-        let likesPageVC = UIViewController()
-        likesPageVC.view.backgroundColor = .yellow
+        let likesPageVC = LikesPageViewController()
+        
         likesPageVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "likesIcon"), selectedImage: UIImage(named: "likesIcon"))
 
-        let profilePageVC = UIViewController()
-        profilePageVC.view.backgroundColor = .purple
+        let profilePageVC = ProfilePageViewController()
+        
         profilePageVC.tabBarItem = UITabBarItem(
             title: nil,
             image: UIImage(systemName: "person.crop.circle")?.withTintColor(UIColor.systemPink, renderingMode: .alwaysOriginal),
