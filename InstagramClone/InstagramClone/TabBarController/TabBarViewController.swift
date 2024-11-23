@@ -18,36 +18,50 @@ class TabBarViewController: UITabBarController {
     private func setupTabBar() {
 
         let mainPageVC = MainPageViewController()
-        
-        mainPageVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "homeIcon"), selectedImage: UIImage(named: "homeIcon"))
+        mainPageVC.tabBarItem = UITabBarItem(
+            title: nil,
+            image: UIImage(named: "homeIconOutline"),
+            selectedImage: UIImage(named: "homeIcon")
+        )
 
         let searchPageVC = SearchPageViewController()
-        
-        searchPageVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "searchIcon"), selectedImage: UIImage(named: "searchIcon"))
+        searchPageVC.tabBarItem = UITabBarItem(
+            title: nil,
+            image: UIImage(named: "searchIcon"),
+            selectedImage: UIImage(named: "searchIconBold")
+        )
 
         let createPostVC = UIViewController()
         createPostVC.view.backgroundColor = .cyan
-        createPostVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "plusIcon"), selectedImage: UIImage(named: "plusIcon"))
-
-        let likesPageVC = LikesPageViewController()
-        
-        likesPageVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "likesIcon"), selectedImage: UIImage(named: "likesIcon"))
-
-        let profilePageVC = ProfilePageViewController()
-        
-        profilePageVC.tabBarItem = UITabBarItem(
+        createPostVC.tabBarItem = UITabBarItem(
             title: nil,
-            image: UIImage(systemName: "person.crop.circle")?.withTintColor(UIColor.systemPink, renderingMode: .alwaysOriginal),
-            selectedImage: UIImage(systemName: "person.crop.circle.fill")?.withTintColor(UIColor.systemTeal, renderingMode: .alwaysOriginal)
+            image: UIImage(named: "plusIcon"),
+            selectedImage: UIImage(named: "plusIcon")
         )
 
+        let likesPageVC = LikesPageViewController()
+        likesPageVC.tabBarItem = UITabBarItem(
+            title: nil,
+            image: UIImage(named: "likesIcon"),
+            selectedImage: UIImage(named: "heartFill")
+        )
+
+        let profilePageVC = ProfilePageViewController()
+        profilePageVC.tabBarItem = UITabBarItem(
+            title: nil,
+            image: UIImage(named: "profileIcon"),
+            selectedImage: UIImage(named: "profileIcon")
+        )
 
         self.viewControllers = [mainPageVC, searchPageVC, createPostVC, likesPageVC, profilePageVC]
 
-
         if let items = tabBar.items {
-            for item in items {
-                item.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
+            for (index, item) in items.enumerated() {
+                if index == 4 {
+                    item.imageInsets = UIEdgeInsets(top: 2, left: 0, bottom: -2, right: 0)
+                } else {
+                    item.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
+                }
             }
         }
 
@@ -56,10 +70,8 @@ class TabBarViewController: UITabBarController {
     }
 
     private func customizeTabBarAppearance() {
-
         tabBar.backgroundColor = UIColor(hex: "FAFAFA")
         
-
         let divider = UIView(frame: CGRect(x: 0, y: -2, width: tabBar.bounds.width, height: 0.5))
         divider.backgroundColor = UIColor(hex: "000000").withAlphaComponent(0.1)
         tabBar.addSubview(divider)
@@ -67,7 +79,6 @@ class TabBarViewController: UITabBarController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
 
         var tabBarFrame = tabBar.frame
         tabBarFrame.size.height = 79
