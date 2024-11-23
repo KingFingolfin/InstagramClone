@@ -74,10 +74,6 @@ class MainPageViewController: UIViewController, UICollectionViewDataSource, UICo
     }
 }
 
-
-
-
-
 import SwiftUI
 struct MainPageViewController_Previews: PreviewProvider {
     static var previews: some View {
