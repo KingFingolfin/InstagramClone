@@ -14,7 +14,7 @@ class MainPageViewController: UIViewController, UICollectionViewDataSource, UICo
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 20 // Spacing between cells
+        layout.minimumLineSpacing = 20
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.dataSource = self
@@ -33,7 +33,6 @@ class MainPageViewController: UIViewController, UICollectionViewDataSource, UICo
     private func setupCollectionView() {
         view.addSubview(collectionView)
         
-        // Add constraints for collectionView
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -51,8 +50,6 @@ class MainPageViewController: UIViewController, UICollectionViewDataSource, UICo
         }
     }
     
-    // MARK: - UICollectionView DataSource
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return posts.count
     }
@@ -61,28 +58,21 @@ class MainPageViewController: UIViewController, UICollectionViewDataSource, UICo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCell", for: indexPath) as! PostCell
         let post = posts[indexPath.row]
         cell.configure(with: post)
-        cell.delegate = self  // დაამატეთ ეს ხაზი
+        cell.delegate = self
  
         return cell
     }
+    
     func didUpdateLikeStatus(for cell: PostCell) {
         if let indexPath = collectionView.indexPath(for: cell) {
-            // განაახლეთ მოდელი
             posts[indexPath.row].userHasLiked = cell.isLiked
-            
-            // განაახლეთ UI
             collectionView.reloadItems(at: [indexPath])
         }
     }
- 
- 
-    
-    // MARK: - UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        // Adjust cell size as needed
-        let width = collectionView.bounds.width - 0 // For padding
-        return CGSize(width: width, height: 700) // Example height
+        let width = collectionView.bounds.width - 0
+        return CGSize(width: width, height: 700)
     }
 }
  

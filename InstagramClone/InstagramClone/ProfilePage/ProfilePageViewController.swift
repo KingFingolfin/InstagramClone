@@ -89,7 +89,7 @@ class ProfilePageViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .white
-        collectionView.register(PostCell.self, forCellWithReuseIdentifier: PostCell.identifier)
+        collectionView.register(PostCell1.self, forCellWithReuseIdentifier: PostCell1.identifier)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.isScrollEnabled = false
         return collectionView
@@ -227,7 +227,7 @@ extension ProfilePageViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCell.identifier, for: indexPath) as? PostCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCell1.identifier, for: indexPath) as? PostCell1 else {
             return UICollectionViewCell()
         }
         

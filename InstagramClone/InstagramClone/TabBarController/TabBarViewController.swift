@@ -24,7 +24,7 @@ class TabBarViewController: UITabBarController {
             selectedImage: UIImage(named: "homeIcon")
         )
 
-        let searchPageVC = SearchPageViewController()
+        let searchPageVC = SearchViewController()
         searchPageVC.tabBarItem = UITabBarItem(
             title: nil,
             image: UIImage(named: "searchIcon"),
