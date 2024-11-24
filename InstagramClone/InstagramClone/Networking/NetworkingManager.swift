@@ -13,7 +13,7 @@ protocol NetworkManagerProtocol {
  
 class NetworkManager: NetworkManagerProtocol {
     
-    let urlString = "http://localhost:3000/v1/geographies/:geo-id/media/recent"
+    let urlString = "http://localhost:3000/v1/v1/geographies/:geo-id/media/recent"
     
     static let shared = NetworkManager()
     
