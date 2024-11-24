@@ -287,6 +287,23 @@ class PostCell: UICollectionViewCell {
     }
     
     @objc private func handleShareButton() {
-        print("[⚠️] Share button pressed")
+        let shareVC = ShareBottomSheetViewController()
+        shareVC.modalPresentationStyle = .pageSheet
+        if let parentVC = self.parentViewController {
+            parentVC.present(shareVC, animated: true)
+        }
+    }
+}
+ 
+extension UIView {
+    var parentViewController: UIViewController? {
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder?.next
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
+            }
+        }
+        return nil
     }
 }
