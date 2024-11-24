@@ -3,8 +3,7 @@
 //  InstagramClone
 //
 //  Created by Nino Kurshavishvili on 23.11.24.
-//
-
+// 
 import UIKit
  
 protocol PostCellDelegate: AnyObject {
@@ -16,7 +15,6 @@ class PostCell: UICollectionViewCell {
  
     var post: Post?
     var isLiked: Bool = false
-    // MARK: - UI Elements
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -240,7 +238,6 @@ class PostCell: UICollectionViewCell {
         likeButton.setImage(UIImage(systemName: imageName), for: .normal)
     }
     
-    // MARK: - Button Actions
     private func setupButtonActions() {
         likeButton.addTarget(self, action: #selector(handleLikeButton), for: .touchUpInside)
         commentButton.addTarget(self, action: #selector(handleCommentButton), for: .touchUpInside)
@@ -252,18 +249,19 @@ class PostCell: UICollectionViewCell {
         
         updateLikeButtonImage()
         
-        delegate?.didUpdateLikeStatus(for: self)
-        
         if let postID = post?.id {
             UserDefaultsManager.saveLikedStatus(for: postID, liked: isLiked)
         }
+        
+        delegate?.didUpdateLikeStatus(for: self)
+        
         guard let postID = post?.id else { return }
         APIManager.shared.updateLikeStatusOnServer(postID: postID, liked: isLiked) { [weak self] success in
             if !success {
                 DispatchQueue.main.async {
                     self?.isLiked.toggle()
                     self?.updateLikeButtonImage()
-                    self?.delegate?.didUpdateLikeStatus(for: self ?? PostCell())
+                    self?.delegate?.didUpdateLikeStatus(for: self!)
                 }
             }
         }
