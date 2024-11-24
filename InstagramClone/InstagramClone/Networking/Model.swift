@@ -27,7 +27,7 @@ struct Post: Codable {
     let tags: [String]
     let type: String
     let user: User
-    let userHasLiked: Bool
+    var userHasLiked: Bool
     let usersInPhoto: [TaggedUser]
     let videos: Videos
  

@@ -6,9 +6,14 @@
 //
 
 import UIKit
-
+ 
+protocol PostCellDelegate: AnyObject {
+    func didUpdateLikeStatus(for cell: PostCell)
+}
+ 
 class PostCell: UICollectionViewCell {
-    
+    weak var delegate: PostCellDelegate?
+ 
     var post: Post?
     var isLiked: Bool = false
     // MARK: - UI Elements
@@ -101,7 +106,6 @@ class PostCell: UICollectionViewCell {
         return imageView
     }()
  
-    // MARK: - Initializer
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -113,7 +117,6 @@ class PostCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Setup Views and Constraints
     
     private func setupViews() {
         contentView.addSubview(profileImageView)
@@ -129,7 +132,6 @@ class PostCell: UICollectionViewCell {
         contentView.addSubview(timestampLabel)
  
         NSLayoutConstraint.activate([
-            // Profile image and labels at the top
             profileImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             profileImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             profileImageView.widthAnchor.constraint(equalToConstant: 40),
@@ -143,13 +145,11 @@ class PostCell: UICollectionViewCell {
             locationLabel.leadingAnchor.constraint(equalTo: usernameLabel.leadingAnchor),
             locationLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8),
  
-            // Post image view with fixed aspect ratio
             postImageView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 8),
             postImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             postImageView.heightAnchor.constraint(equalTo: postImageView.widthAnchor, multiplier: 1.25),
  
-            // Like, comment, and share buttons
             likeButton.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 8),
             likeButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
             likeButton.widthAnchor.constraint(equalToConstant: 24),
@@ -165,7 +165,6 @@ class PostCell: UICollectionViewCell {
             shareButton.widthAnchor.constraint(equalToConstant: 24),
             shareButton.heightAnchor.constraint(equalToConstant: 24),
  
-            // Liked by section
             likedByImageView.topAnchor.constraint(equalTo: likeButton.bottomAnchor, constant: 8),
             likedByImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             likedByImageView.widthAnchor.constraint(equalToConstant: 22),
@@ -175,12 +174,10 @@ class PostCell: UICollectionViewCell {
             likedByLabel.leadingAnchor.constraint(equalTo: likedByImageView.trailingAnchor, constant: 8),
             likedByLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8),
  
-            // Caption label below likedByLabel
             captionLabel.topAnchor.constraint(equalTo: likedByLabel.bottomAnchor, constant: 4),
             captionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             captionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
  
-            // Timestamp label below captionLabel
             timestampLabel.topAnchor.constraint(equalTo: captionLabel.bottomAnchor, constant: 4),
             timestampLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             timestampLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8),
@@ -190,12 +187,10 @@ class PostCell: UICollectionViewCell {
  
  
  
-    // MARK: - Helper Methods
     
     private func formatTimestamp(_ timestamp: String) -> String {
-        // Converts the timestamp to a more readable format
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"  // Adjust format if necessary
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         if let date = dateFormatter.date(from: timestamp) {
             dateFormatter.dateStyle = .medium
             dateFormatter.timeStyle = .short
@@ -205,27 +200,22 @@ class PostCell: UICollectionViewCell {
     }
     
     func configure(with post: Post) {
-        // Set profile image
         self.post = post
         if let profileImageUrl = URL(string: post.user.profilePicture) {
             profileImageView.loadImage(from: profileImageUrl)
         }
+ 
         
-        
-        // Set the username and location
         usernameLabel.text = post.user.username
         locationLabel.text = post.location.name
         
-        // Set the post image
         if let postImageUrl = URL(string: post.images.standardResolution.url) {
             postImageView.loadImage(from: postImageUrl)
         }
-        
-        // Set like count, caption, and timestamp
+ 
         captionLabel.text = "\(post.user.username) \(post.caption.text)"
         timestampLabel.text = formatTimestamp(post.createdTime)
         
-        // Load the saved liked status from UserDefaults and update the like button
         isLiked = UserDefaultsManager.getLikedStatus(for: post.id)
         updateLikeButtonImage() // Update the button image based on the liked status
         
@@ -237,7 +227,7 @@ class PostCell: UICollectionViewCell {
             likedByLabel.attributedText = attributedText
             
             if let likedByImageUrl = URL(string: firstLikeUser.profilePicture) {
-                likedByImageView.loadImage(from: likedByImageUrl) // Ensure `loadImage` is implemented for image loading
+                likedByImageView.loadImage(from: likedByImageUrl)
             }
         } else {
             likedByLabel.text = "Be the first to like this"
@@ -258,30 +248,26 @@ class PostCell: UICollectionViewCell {
     }
     
     @objc private func handleLikeButton() {
-        // Toggle the local liked status
         isLiked.toggle()
- 
-        // Update the heart icon based on the new liked status
+        
         updateLikeButtonImage()
- 
-        // Save the updated liked status in UserDefaults
+        
+        delegate?.didUpdateLikeStatus(for: self)
+        
         if let postID = post?.id {
             UserDefaultsManager.saveLikedStatus(for: postID, liked: isLiked)
         }
- 
-        // Send API request to update the liked status on the server
         guard let postID = post?.id else { return }
-        APIManager.shared.updateLikeStatusOnServer(postID: postID, liked: isLiked) { success in
+        APIManager.shared.updateLikeStatusOnServer(postID: postID, liked: isLiked) { [weak self] success in
             if !success {
                 DispatchQueue.main.async {
-                    // Revert the local liked status if the API update fails
-                    self.isLiked.toggle()
-                    self.updateLikeButtonImage()
+                    self?.isLiked.toggle()
+                    self?.updateLikeButtonImage()
+                    self?.delegate?.didUpdateLikeStatus(for: self ?? PostCell())
                 }
             }
         }
     }
-    
     @objc private func handleCommentButton() {
         print("[⚠️] Comment button pressed")
     }

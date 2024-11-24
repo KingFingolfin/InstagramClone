@@ -4,11 +4,10 @@
 //
 //  Created by Giorgi on 22.11.24.
 //
-
 import UIKit
-
-class MainPageViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
+ 
+class MainPageViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PostCellDelegate {
+ 
     private let postViewModel = PostViewModel()
     private var posts: [Post] = []
     
@@ -62,9 +61,21 @@ class MainPageViewController: UIViewController, UICollectionViewDataSource, UICo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCell", for: indexPath) as! PostCell
         let post = posts[indexPath.row]
         cell.configure(with: post)
+        cell.delegate = self  // დაამატეთ ეს ხაზი
+ 
         return cell
     }
-
+    func didUpdateLikeStatus(for cell: PostCell) {
+        if let indexPath = collectionView.indexPath(for: cell) {
+            // განაახლეთ მოდელი
+            posts[indexPath.row].userHasLiked = cell.isLiked
+            
+            // განაახლეთ UI
+            collectionView.reloadItems(at: [indexPath])
+        }
+    }
+ 
+ 
     
     // MARK: - UICollectionViewDelegateFlowLayout
     
@@ -74,7 +85,7 @@ class MainPageViewController: UIViewController, UICollectionViewDataSource, UICo
         return CGSize(width: width, height: 700) // Example height
     }
 }
-
+ 
 import SwiftUI
 struct MainPageViewController_Previews: PreviewProvider {
     static var previews: some View {
@@ -83,7 +94,7 @@ struct MainPageViewController_Previews: PreviewProvider {
         }
     }
 }
-
+ 
 struct ViewControllerPreview<ViewController: UIViewController>: UIViewControllerRepresentable {
     let viewController: ViewController
     
@@ -97,3 +108,4 @@ struct ViewControllerPreview<ViewController: UIViewController>: UIViewController
     
     func updateUIViewController(_ uiViewController: ViewController, context: Context) {}
 }
+ 
