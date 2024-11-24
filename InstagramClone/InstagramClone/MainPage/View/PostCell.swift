@@ -9,7 +9,7 @@ import UIKit
 
 class PostCell: UICollectionViewCell {
     
-    var post: SinglePost?
+    var post: Post?
     var isLiked: Bool = false
     // MARK: - UI Elements
     
@@ -68,13 +68,6 @@ class PostCell: UICollectionViewCell {
         return button
     }()
     
-    let likeCountLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 14)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     let captionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
@@ -91,6 +84,23 @@ class PostCell: UICollectionViewCell {
         return label
     }()
     
+    let likedByLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let likedByImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 12 // Assuming a circular image
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
     // MARK: - Initializer
     
     override init(frame: CGRect) {
@@ -113,52 +123,73 @@ class PostCell: UICollectionViewCell {
         contentView.addSubview(likeButton)
         contentView.addSubview(commentButton)
         contentView.addSubview(shareButton)
-        contentView.addSubview(likeCountLabel)
+        contentView.addSubview(likedByImageView)
+        contentView.addSubview(likedByLabel)
         contentView.addSubview(captionLabel)
         contentView.addSubview(timestampLabel)
-        
-        // Add Constraints
+
         NSLayoutConstraint.activate([
+            // Profile image and labels at the top
             profileImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             profileImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             profileImageView.widthAnchor.constraint(equalToConstant: 40),
             profileImageView.heightAnchor.constraint(equalToConstant: 40),
-            
+
             usernameLabel.topAnchor.constraint(equalTo: profileImageView.topAnchor),
             usernameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 8),
-            
-            locationLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 4),
+            usernameLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8),
+
+            locationLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 2),
             locationLabel.leadingAnchor.constraint(equalTo: usernameLabel.leadingAnchor),
-            
+            locationLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8),
+
+            // Post image view with fixed aspect ratio
             postImageView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 8),
             postImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            postImageView.heightAnchor.constraint(equalTo: postImageView.widthAnchor),
-            
+            postImageView.heightAnchor.constraint(equalTo: postImageView.widthAnchor, multiplier: 1.25),
+
+            // Like, comment, and share buttons
             likeButton.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 8),
-            likeButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             likeButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
             likeButton.widthAnchor.constraint(equalToConstant: 24),
             likeButton.heightAnchor.constraint(equalToConstant: 24),
-            
+
             commentButton.centerYAnchor.constraint(equalTo: likeButton.centerYAnchor),
             commentButton.leadingAnchor.constraint(equalTo: likeButton.trailingAnchor, constant: 12),
-            
+            commentButton.widthAnchor.constraint(equalToConstant: 24),
+            commentButton.heightAnchor.constraint(equalToConstant: 24),
+
             shareButton.centerYAnchor.constraint(equalTo: likeButton.centerYAnchor),
             shareButton.leadingAnchor.constraint(equalTo: commentButton.trailingAnchor, constant: 12),
-            
-            likeCountLabel.topAnchor.constraint(equalTo: likeButton.bottomAnchor, constant: 8),
-            likeCountLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            
-            captionLabel.topAnchor.constraint(equalTo: likeCountLabel.bottomAnchor, constant: 4),
+            shareButton.widthAnchor.constraint(equalToConstant: 24),
+            shareButton.heightAnchor.constraint(equalToConstant: 24),
+
+            // Liked by section
+            likedByImageView.topAnchor.constraint(equalTo: likeButton.bottomAnchor, constant: 8),
+            likedByImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            likedByImageView.widthAnchor.constraint(equalToConstant: 22),
+            likedByImageView.heightAnchor.constraint(equalToConstant: 22),
+
+            likedByLabel.centerYAnchor.constraint(equalTo: likedByImageView.centerYAnchor),
+            likedByLabel.leadingAnchor.constraint(equalTo: likedByImageView.trailingAnchor, constant: 8),
+            likedByLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8),
+
+            // Caption label below likedByLabel
+            captionLabel.topAnchor.constraint(equalTo: likedByLabel.bottomAnchor, constant: 4),
             captionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             captionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            
+
+            // Timestamp label below captionLabel
             timestampLabel.topAnchor.constraint(equalTo: captionLabel.bottomAnchor, constant: 4),
             timestampLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            timestampLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8),
             timestampLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
     }
+
+
+
     // MARK: - Helper Methods
     
     private func formatTimestamp(_ timestamp: String) -> String {
@@ -189,13 +220,26 @@ class PostCell: UICollectionViewCell {
         }
         
         // Set like count, caption, and timestamp
-        likeCountLabel.text = "\(post.likes.count) likes"
-        captionLabel.text = post.caption.text
+        captionLabel.text = "\(post.user.username) \(post.caption.text)"
         timestampLabel.text = formatTimestamp(post.createdTime)
         
         // Load the saved liked status from UserDefaults and update the like button
         isLiked = UserDefaultsManager.getLikedStatus(for: post.id)
         updateLikeButtonImage() // Update the button image based on the liked status
+        
+        if let firstLikeUser = post.likes.data.first {
+            let fullText = "Liked by \(firstLikeUser.username) and \(post.likes.count - 1) others"
+            let attributedText = NSMutableAttributedString(string: fullText)
+            let usernameRange = (fullText as NSString).range(of: firstLikeUser.username)
+            attributedText.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 14), range: usernameRange)
+            likedByLabel.attributedText = attributedText
+            
+            if let likedByImageUrl = URL(string: firstLikeUser.profilePicture) {
+                likedByImageView.loadImage(from: likedByImageUrl) // Ensure `loadImage` is implemented for image loading
+            }
+        } else {
+            likedByLabel.text = "Be the first to like this"
+        }
     }
 
     
@@ -237,8 +281,6 @@ class PostCell: UICollectionViewCell {
         } else {
             print("Post object: \(String(describing: post))")
             print("Post ID: \(String(describing: post?.id))")
-            
-            // Optionally, you can handle the error here (e.g., showing an alert to the user)
         }
     }
 

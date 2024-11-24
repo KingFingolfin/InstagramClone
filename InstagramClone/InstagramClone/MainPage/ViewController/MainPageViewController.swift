@@ -60,17 +60,18 @@ class MainPageViewController: UIViewController, UICollectionViewDataSource, UICo
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCell", for: indexPath) as! PostCell
-        let post = posts[indexPath.item]
+        let post = posts[indexPath.row]
         cell.configure(with: post)
         return cell
     }
+
     
     // MARK: - UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // Adjust cell size as needed
-        let width = collectionView.bounds.width - 40 // For padding
-        return CGSize(width: width, height: 300) // Example height
+        let width = collectionView.bounds.width - 0 // For padding
+        return CGSize(width: width, height: 700) // Example height
     }
 }
 
