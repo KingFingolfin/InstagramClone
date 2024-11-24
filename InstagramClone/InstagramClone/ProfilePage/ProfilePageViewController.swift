@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+ 
 class ProfilePageViewController: UIViewController {
     
     private var posts: [Post] = []
@@ -14,21 +14,25 @@ class ProfilePageViewController: UIViewController {
 
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
+        scrollView.backgroundColor = .white
+        scrollView.showsVerticalScrollIndicator = true
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
-
+    
     private let contentView: UIView = {
         let view = UIView()
+        view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
+    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 48
         imageView.clipsToBounds = true
         imageView.backgroundColor = .lightGray
+        imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -36,7 +40,6 @@ class ProfilePageViewController: UIViewController {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 12)
-        label.text = ""
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -45,16 +48,16 @@ class ProfilePageViewController: UIViewController {
     private let statsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
+        stackView.distribution = .equalSpacing
         stackView.alignment = .center
         stackView.spacing = 0
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-
+    
     private let bioLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
-        label.text = "Bio description goes here"
         label.textAlignment = .center
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -70,27 +73,47 @@ class ProfilePageViewController: UIViewController {
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.systemGray5.cgColor
+        button.backgroundColor = .white
         return button
     }()
     
-    private let collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.bounds.width
-        let itemSize = (screenWidth - 3) / 3
+        let itemSize = (screenWidth - 2) / 3
         layout.itemSize = CGSize(width: itemSize, height: itemSize)
         layout.minimumInteritemSpacing = 1
         layout.minimumLineSpacing = 1
+        layout.scrollDirection = .vertical
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.backgroundColor = .white
+        collectionView.register(PostCell.self, forCellWithReuseIdentifier: PostCell.identifier)
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.isScrollEnabled = false
         return collectionView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+        setupConstraints()
+        setupCollectionView()
+        
+        PostFetcher.fetchAndDisplayPosts(viewModel: profileViewModel) { [weak self] posts, fullName, profileImage in
+            guard let self = self else { return }
+            self.posts = posts
+            self.nameLabel.text = fullName
+            self.profileImageView.image = profileImage
+            self.updateStatsUI()
+            self.updateUI()
+        }
+    }
+    
+    private func setupUI() {
         view.backgroundColor = .white
+        title = "Profile"
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -102,114 +125,115 @@ class ProfilePageViewController: UIViewController {
         contentView.addSubview(editProfileButton)
         contentView.addSubview(collectionView)
         
+        setupStatsStackView()
+    }
+    
+    private func setupStatsStackView() {
         let postsLabel = createStatLabel(count: 0, label: "Posts")
-        let followersLabel = createStatLabel(count: 0, label: "Followers")
-        let followingLabel = createStatLabel(count: 0, label: "Following")
+        let followersLabel = createStatLabel(count: 124, label: "Followers")
+        let followingLabel = createStatLabel(count: 221, label: "Following")
         
-        statsStackView.addArrangedSubview(postsLabel)
-        statsStackView.addArrangedSubview(followersLabel)
-        statsStackView.addArrangedSubview(followingLabel)
-        fetchAndDisplayPosts()
+        [postsLabel, followersLabel, followingLabel].forEach {
+            statsStackView.addArrangedSubview($0)
+        }
+    }
+    
+    private func setupCollectionView() {
+        collectionView.dataSource = self
+    }
+    
+    private func setupConstraints() {
+        let contentViewHeightConstraint = contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
+        contentViewHeightConstraint.priority = .defaultLow
+        
         NSLayoutConstraint.activate([
-            
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: -80),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: -60),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-
+            contentViewHeightConstraint,
+            
             profileImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 88),
             profileImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             profileImageView.widthAnchor.constraint(equalToConstant: 96),
             profileImageView.heightAnchor.constraint(equalToConstant: 96),
-
+            
             nameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 12),
             nameLabel.leadingAnchor.constraint(equalTo: profileImageView.leadingAnchor),
-
+            
             statsStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 118),
-            statsStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 142),
-            statsStackView.widthAnchor.constraint(equalToConstant: 255),
-            statsStackView.heightAnchor.constraint(equalToConstant: 36),
-
+            statsStackView.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 28),
+            statsStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -28),
+            
             bioLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
             bioLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-
-            editProfileButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 260),
-            editProfileButton.widthAnchor.constraint(equalToConstant: 343),
-            editProfileButton.heightAnchor.constraint(equalToConstant: 29),
-            editProfileButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-
+            bioLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            
+            editProfileButton.topAnchor.constraint(equalTo: bioLabel.bottomAnchor, constant: 20),
+            editProfileButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            editProfileButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            editProfileButton.heightAnchor.constraint(equalToConstant: 30),
+            
             collectionView.topAnchor.constraint(equalTo: editProfileButton.bottomAnchor, constant: 20),
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 1000),
             collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-         ])
-
-        collectionView.dataSource = self
+        ])
     }
-    func downloadImage(fromurl: URL, completion: @escaping (UIImage?) -> Void) {
-    let task = URLSession.shared.dataTask(with: fromurl) { data, _ , error in guard let data = data, error == nil else {
-    print("Failed to download image: \(String(describing: error))")
-                    completion(nil)
-    return
-                }
-                completion(UIImage(data: data))
-            }
-            task.resume()
-        }
-
-
-    private func fetchAndDisplayPosts() {
-        profileViewModel.fetchPosts { [weak self] in
-                guard let self else {return}
-                DispatchQueue.main.async {
-                    self.nameLabel.text = self.profileViewModel.posts.last?.user.fullName ?? "GEO"
-                    if let url = URL(string: self.profileViewModel.posts.last?.user.profilePicture ?? "geo") {
-                        self.downloadImage(fromurl: url) { image in DispatchQueue.main.async {
-                            self.profileImageView.image = image
-                                    }
-                                }
-                            }
-                    self.nameLabel.text = self.profileViewModel.posts.last?.user.fullName ?? "GEO"
-                    self.nameLabel.text = self.profileViewModel.posts.last?.user.fullName ?? "GEO"
-                    self.nameLabel.text = self.profileViewModel.posts.last?.user.fullName ?? "GEO"
-
-                }
-            }
-        }
-
-    private func updateUI() {
-        collectionView.reloadData()
-    }
-
-    private func handleError(_ error: NetworkError) {
-        print("Error fetching posts: \(error)")
-    }
-
+    
     private func createStatLabel(count: Int, label: String) -> UILabel {
         let statLabel = UILabel()
-        statLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        statLabel.font = UIFont.systemFont(ofSize: 14)
         statLabel.text = "\(count)\n\(label)"
         statLabel.textAlignment = .center
         statLabel.numberOfLines = 2
-        statLabel.translatesAutoresizingMaskIntoConstraints = false
         return statLabel
     }
+    
+    private func updateUI() {
+        collectionView.reloadData()
+        
+        let screenWidth = UIScreen.main.bounds.width
+        let itemWidth = (screenWidth - 2) / 3
+        let numberOfItems = CGFloat(posts.count)
+        let numberOfRows = ceil(numberOfItems / 3)
+        let collectionViewHeight = numberOfRows * itemWidth + (numberOfRows - 1)
+        
+        if let heightConstraint = collectionView.constraints.first(where: { $0.firstAttribute == .height }) {
+            heightConstraint.isActive = false
+        }
+        
+        collectionView.heightAnchor.constraint(equalToConstant: collectionViewHeight).isActive = true
+        
+        view.layoutIfNeeded()
+    }
+    
+    private func updateStatsUI() {
+        if let postsLabel = statsStackView.arrangedSubviews.first as? UILabel {
+            postsLabel.text = "\(posts.count)\nPosts"
+        }
+    }
 }
+ 
 extension ProfilePageViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return profileViewModel.posts.count
+        return posts.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        let post = profileViewModel.posts[indexPath.row]
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCell.identifier, for: indexPath) as? PostCell else {
+            return UICollectionViewCell()
+        }
+        
+        let post = posts[indexPath.row]
+        cell.configure(with: post)
         return cell
     }
 }
+ 
