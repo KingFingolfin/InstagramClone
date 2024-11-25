@@ -54,4 +54,4 @@ If you have any questions or feedback regarding the project, feel free to contac
 Lead: **Giorgi Beraia** - giorgi.beraia37@gmail.com
 
 
-<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/main.png" alt="Main Feed Screenshot" width="600"/>
+<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/main.png" alt="Main Feed Screenshot" width="200"/>
