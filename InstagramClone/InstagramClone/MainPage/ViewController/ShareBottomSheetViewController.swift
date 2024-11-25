@@ -151,3 +151,7 @@ class ProfileCell: UICollectionViewCell {
         nameLabel.text = name
     }
 }
+
+#Preview {
+    ShareBottomSheetViewController()
+}
