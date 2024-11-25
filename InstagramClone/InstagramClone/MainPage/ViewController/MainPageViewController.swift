@@ -76,26 +76,17 @@ class MainPageViewController: UIViewController, UICollectionViewDataSource, UICo
     }
 }
  
-import SwiftUI
-struct MainPageViewController_Previews: PreviewProvider {
-    static var previews: some View {
-        ViewControllerPreview {
-            MainPageViewController()
-        }
+class MainPageViewController_Previews: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        let mainPageVC = MainPageViewController()
+
+        addChild(mainPageVC)
+        view.addSubview(mainPageVC.view)
+        mainPageVC.didMove(toParent: self)
+
+        mainPageVC.view.frame = view.bounds
     }
-}
- 
-struct ViewControllerPreview<ViewController: UIViewController>: UIViewControllerRepresentable {
-    let viewController: ViewController
-    
-    init(_ builder: @escaping () -> ViewController) {
-        viewController = builder()
-    }
-    
-    func makeUIViewController(context: Context) -> ViewController {
-        return viewController
-    }
-    
-    func updateUIViewController(_ uiViewController: ViewController, context: Context) {}
 }
  
