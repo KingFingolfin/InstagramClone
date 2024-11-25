@@ -37,6 +37,13 @@ To run this project locally, you will need:
 2. Open the project in Xcode.
 3. Build and run the project on your preferred simulator or device.
 
+## ScreenShots of Project (iphone 16, ios 18)
+<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/main.png" alt="Main Feed Screenshot" width="200"/>
+<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/search.png" alt="Search Page Screenshot" width="200"/>
+<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/add.png" alt="add story Screenshot" width="200"/>
+<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/likes.png" alt="Likes Page Screenshot" width="200"/>
+<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/profile.png" alt="Profile Page Screenshot" width="200"/>
+
 ## Team Credits
 Here’s the team behind the Instagram Clone App:
 
@@ -52,6 +59,3 @@ Team Members:
 If you have any questions or feedback regarding the project, feel free to contact us.
 
 Lead: **Giorgi Beraia** - giorgi.beraia37@gmail.com
-
-
-<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/main.png" alt="Main Feed Screenshot" width="200"/>
