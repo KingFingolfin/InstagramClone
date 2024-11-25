@@ -11,8 +11,8 @@ class ShareBottomSheetViewController: UIViewController {
     private let postViewModel = PostViewModel()
     private var posts: [Post] = []
     
-    private let actionTitles = ["Copy Link", "Share to...", "WhatsApp", "Add to Story"]
-    private let actionIcons: [UIImage?] = [
+    let actionTitles = ["Copy Link", "Share to...", "WhatsApp", "Add to Story"]
+    let actionIcons: [UIImage?] = [
         UIImage(systemName: "link"),
         UIImage(systemName: "square.and.arrow.up"),
         UIImage(systemName: "message"),
