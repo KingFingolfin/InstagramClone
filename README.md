@@ -45,6 +45,7 @@ To run this project locally, you will need:
 <img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/likes.png" alt="Likes Page Screenshot" width="200"/>
 <img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/profile.png" alt="Profile Page Screenshot" width="200"/>
 </div>
+
 ## Team Credits
 Here’s the team behind the Instagram Clone App:
 
