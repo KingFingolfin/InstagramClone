@@ -4,14 +4,21 @@
 //
 //  Created by Giorgi on 22.11.24.
 //
-
+ 
 import UIKit
+ 
+protocol ProfilePageViewControllerDelegate: AnyObject {
+    func didUpdateProfileImage(_ image: UIImage)
+}
  
 class ProfilePageViewController: UIViewController {
     
-    private var posts: [Post] = []
-    private var profileViewModel: PostViewModel = PostViewModel()
-
+    weak var delegate: ProfilePageViewControllerDelegate?  // Delegate ცვლადი
+     
+     private var posts: [Post] = []
+     private var profileViewModel: PostViewModel = PostViewModel()
+ 
+ 
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.backgroundColor = .white
@@ -108,12 +115,14 @@ class ProfilePageViewController: UIViewController {
             self.profileImageView.image = profileImage
             self.updateStatsUI()
             self.updateUI()
+            guard let profileImage = profileImage else { return }
+            self.delegate?.didUpdateProfileImage(profileImage)
         }
     }
     
     private func setupUI() {
         view.backgroundColor = .white
-        title = "Profile"
+        title = ""
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -236,4 +245,3 @@ extension ProfilePageViewController: UICollectionViewDataSource {
         return cell
     }
 }
- 
