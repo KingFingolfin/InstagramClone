@@ -14,7 +14,7 @@ The project aims to provide a userfriendly experience, with easy interaction in 
 - **Last Events**: Keep up-to-date with the latest posts and activities in the app.
 
 ## How We Worked
-This project was developed collaboratively, with each team member focusing on specific features of the app to ensure smooth integration and functionality. sharing code with github and helping eachother in solving bugs.
+This project was developed collaboratively, with each team member focusing on specific features of the app to ensure smooth integration and functionality. We used MVVM structure for this projects. sharing code with github and helping eachother in solving bugs.
 
 ### Technology Used:
 - **Language**: Swift
