@@ -39,11 +39,11 @@ To run this project locally, you will need:
 
 ## ScreenShots of Project (iphone 16, ios 18)
 <div style="display: flex; justify-content: space-around;">
-<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/main.png" alt="Main Feed Screenshot" width="200"/>
-<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/search.png" alt="Search Page Screenshot" width="200"/>
-<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/add.png" alt="add story Screenshot" width="200"/>
-<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/likes.png" alt="Likes Page Screenshot" width="200"/>
-<img src="https://github.com/KingFingolfin/InstagramClone/blob/update/projectDesign/InstagramClone/Screenshots/profile.png" alt="Profile Page Screenshot" width="200"/>
+<img src="https://github.com/KingFingolfin/InstagramClone/blob/main/InstagramClone/Screenshots/main.png" alt="Main Feed Screenshot" width="200"/>
+<img src="https://github.com/KingFingolfin/InstagramClone/blob/main/InstagramClone/Screenshots/search.png" alt="Search Page Screenshot" width="200"/>
+<img src="https://github.com/KingFingolfin/InstagramClone/blob/main/InstagramClone/Screenshots/add.png" alt="add story Screenshot" width="200"/>
+<img src="https://github.com/KingFingolfin/InstagramClone/blob/main/InstagramClone/Screenshots/likes.png" alt="Likes Page Screenshot" width="200"/>
+<img src="https://github.com/KingFingolfin/InstagramClone/blob/main/InstagramClone/Screenshots/profile.png" alt="Profile Page Screenshot" width="200"/>
 </div>
 
 ## Team Credits
