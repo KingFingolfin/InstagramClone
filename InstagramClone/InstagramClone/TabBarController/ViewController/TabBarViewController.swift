@@ -85,7 +85,7 @@ class TabBarViewController: UITabBarController {
             profileImageView.widthAnchor.constraint(equalToConstant: 30),
             profileImageView.heightAnchor.constraint(equalToConstant: 30),
             profileImageView.centerXAnchor.constraint(equalTo: tabBar.centerXAnchor, constant: tabBar.frame.width / 5 * 2),
-            profileImageView.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: 6)
+            profileImageView.centerYAnchor.constraint(equalTo: tabBar.safeAreaLayoutGuide.centerYAnchor)
         ])
  
         if let items = tabBar.items {
