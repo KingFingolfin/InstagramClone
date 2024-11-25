@@ -80,7 +80,7 @@ class ShareBottomSheetViewController: UIViewController {
             actionButton.setTitleColor(.black, for: .normal)
             actionButton.contentHorizontalAlignment = .center
             actionButton.titleEdgeInsets = UIEdgeInsets(top: 32, left: -32, bottom: 0, right: 0)
-            actionButton.imageEdgeInsets = UIEdgeInsets(top: -8, left: 0, bottom: 16, right: 0)
+            actionButton.imageEdgeInsets = UIEdgeInsets(top: -8, left: 17, bottom: 16, right: 0)
             actionStackView.addArrangedSubview(actionButton)
         }
  
