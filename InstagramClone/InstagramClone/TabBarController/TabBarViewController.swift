@@ -77,7 +77,8 @@ class TabBarViewController: UITabBarController {
                 )
  
         self.viewControllers = [mainPageVC, searchPageVC, createPostVC, likesPageVC, profilePageVC]
-        
+        _ = profilePageVC.view
+ 
         tabBar.addSubview(profileImageView)
         
         NSLayoutConstraint.activate([
