@@ -31,8 +31,7 @@ class TabBarViewController: UITabBarController {
             selectedImage: UIImage(named: "searchIconBold")
         )
 
-        let createPostVC = UIViewController()
-        createPostVC.view.backgroundColor = .cyan
+        let createPostVC = StoryPageViewController()
         createPostVC.tabBarItem = UITabBarItem(
             title: nil,
             image: UIImage(named: "plusIcon"),
