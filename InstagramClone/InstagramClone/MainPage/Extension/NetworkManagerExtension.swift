@@ -7,10 +7,7 @@
 
 import Foundation
 
-// Extend NetworkManager with additional functionality
 extension NetworkManager {
-    
-    // Perform API Request for a generic endpoint and parameters
     func performAPIRequest(endpoint: String, parameters: [String: Any], completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: urlString + endpoint) else {
             print("Invalid URL")
@@ -44,7 +41,7 @@ extension NetworkManager {
             }
             
             DispatchQueue.main.async {
-                completion(true) // Success response from the server
+                completion(true) 
             }
         }
         

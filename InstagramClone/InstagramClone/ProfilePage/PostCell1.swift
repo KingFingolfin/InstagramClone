@@ -1,13 +1,13 @@
 //
-//  PostCell.swift
+//  PostCell1.swift
 //  INSTAGRAM
 //
 //  Created by shota shotadze on 24.11.24.
 //
 
 import UIKit
-class PostCell: UICollectionViewCell {
-    static let identifier = "PostCell"
+class PostCell1: UICollectionViewCell {
+    static let identifier = "PostCell1"
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()

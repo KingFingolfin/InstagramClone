@@ -11,7 +11,7 @@ class TopBar: UIView {
     
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "InstagramLogo") // Replace with your asset name
+        imageView.image = UIImage(named: "InstagramLogo")
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -28,15 +28,14 @@ class TopBar: UIView {
     }
     
     private func setupView() {
-        backgroundColor = .white // Set the background color if needed
+        backgroundColor = .white
         addSubview(logoImageView)
         
-        // Center the logo in the TopBar
         NSLayoutConstraint.activate([
             logoImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             logoImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            logoImageView.heightAnchor.constraint(equalToConstant: 40), // Adjust logo size as needed
-            logoImageView.widthAnchor.constraint(equalToConstant: 120)  // Adjust logo size as needed
+            logoImageView.heightAnchor.constraint(equalToConstant: 40),
+            logoImageView.widthAnchor.constraint(equalToConstant: 120)
         ])
     }
 }

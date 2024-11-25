@@ -1,10 +1,9 @@
 import UIKit
-
+ 
 class SearchViewController: UIViewController {
     private let viewModel = PhotoViewModel()
     private var filteredUser: User?
     private var isSearching = false
-    
     let horizontalStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -14,22 +13,19 @@ class SearchViewController: UIViewController {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
-    
     let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = "Search"
+        searchBar.placeholder = "Search by full name"
         searchBar.searchBarStyle = .minimal
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         return searchBar
     }()
-    
     let userInfoView: UIView = {
         let view = UIView()
         view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
     let userImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -38,17 +34,14 @@ class SearchViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    
     let userNameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
     private lazy var collectionView: UICollectionView = {
           let layout = CustomInstagramLayout()
-          
           let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
           collection.backgroundColor = .clear
           collection.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +50,7 @@ class SearchViewController: UIViewController {
           collection.dataSource = self
           return collection
       }()
-
+ 
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,68 +59,34 @@ class SearchViewController: UIViewController {
         searchBar.delegate = self
         fetchPhotos()
     }
-    
     private func setupUI() {
         view.addSubview(horizontalStackView)
         view.addSubview(userInfoView)
         view.addSubview(collectionView)
-        
         horizontalStackView.addArrangedSubview(searchBar)
-        
         userInfoView.addSubview(userImageView)
         userInfoView.addSubview(userNameLabel)
-        
         NSLayoutConstraint.activate([
             horizontalStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
             horizontalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             horizontalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
-            
             searchBar.heightAnchor.constraint(equalToConstant: 36),
-            
             userInfoView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 20),
             userInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             userInfoView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             userInfoView.heightAnchor.constraint(equalToConstant: 80),
-            
             userImageView.leadingAnchor.constraint(equalTo: userInfoView.leadingAnchor),
             userImageView.centerYAnchor.constraint(equalTo: userInfoView.centerYAnchor),
             userImageView.widthAnchor.constraint(equalToConstant: 60),
             userImageView.heightAnchor.constraint(equalToConstant: 60),
-            
             userNameLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 16),
             userNameLabel.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor),
-            
             collectionView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: 20),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
         ])
     }
-    
-    var photos: [ImageDetails] = []
-    private var users: [User] = []
-    
-    func fetchPhotos(completion: @escaping () -> Void) {
-        NetworkManager.shared.fetchData { [weak self] result in
-            switch result {
-            case .success(let posts):
-                self?.photos = posts.compactMap { $0.images.standardResolution }
-                self?.users = posts.map { $0.user }
-                completion()
-            case .failure(let error):
-                print("Failed to fetch photos: \(error)")
-                completion()
-            }
-        }
-    }
-    
-    func searchUser(by name: String, completion: @escaping (User?) -> Void) {
-        let filteredUser = users.first { user in
-            user.fullName.lowercased().contains(name.lowercased())
-        }
-        completion(filteredUser)
-    }
-    
     private func fetchPhotos() {
         viewModel.fetchPhotos { [weak self] in
             DispatchQueue.main.async {
@@ -135,20 +94,17 @@ class SearchViewController: UIViewController {
             }
         }
     }
-    
     private func loadImage(from url: URL, into imageView: UIImageView) {
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 print("Error loading image: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
-            
             DispatchQueue.main.async {
                 imageView.image = UIImage(data: data)
             }
         }.resume()
     }
-    
     private func showUserInfo(_ user: User) {
         userInfoView.isHidden = false
         collectionView.isHidden = true
@@ -157,7 +113,6 @@ class SearchViewController: UIViewController {
             loadImage(from: profileImageUrl, into: userImageView)
         }
     }
-    
     private func resetView() {
         isSearching = false
         userInfoView.isHidden = true
@@ -165,15 +120,13 @@ class SearchViewController: UIViewController {
         collectionView.reloadData()
     }
 }
-
-
+ 
 extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             resetView()
             return
         }
-        
         isSearching = true
         viewModel.searchUser(by: searchText) { [weak self] user in
             DispatchQueue.main.async {
@@ -186,31 +139,27 @@ extension SearchViewController: UISearchBarDelegate {
             }
         }
     }
-    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
 }
-
+ 
 extension SearchViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.photos.count
     }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SearchCollection", for: indexPath) as? SearchCollection else {
             return UICollectionViewCell()
         }
-        
         let photo = viewModel.photos[indexPath.item]
         if let imageUrl = URL(string: photo.url) {
             loadImage(from: imageUrl, into: cell.imageView)
         }
-        
         return cell
     }
 }
-
+ 
 extension SearchViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     }
