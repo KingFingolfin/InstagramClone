@@ -8,7 +8,9 @@
 import UIKit
 
 class ShareBottomSheetViewController: UIViewController {
-
+    private let postViewModel = PostViewModel()
+    private var posts: [Post] = []
+    
     private let profileNames = ["Alex", "Bella", "Chris", "Diana", "Evan", "Fiona"]
     private let profileImages: [UIImage?] = [
         UIImage(systemName: "person.circle"),
@@ -34,8 +36,18 @@ class ShareBottomSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        fetchData()
     }
-
+    
+    private func fetchData() {
+        postViewModel.fetchPosts { [weak self] in
+            DispatchQueue.main.async {
+                self?.posts = self?.postViewModel.posts ?? []
+                self?.collectionView.reloadData()
+            }
+        }
+    }
+    
     private func setupUI() {
         view.backgroundColor = .white
         view.layer.cornerRadius = 16
@@ -92,8 +104,21 @@ extension ShareBottomSheetViewController: UICollectionViewDataSource, UICollecti
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileCell", for: indexPath) as! ProfileCell
-        cell.configure(image: profileImages[indexPath.item], name: profileNames[indexPath.item])
+        
+        let name = indexPath.item < posts.count ? posts[indexPath.item].user.fullName : "Guest"
+        
+        
+        if indexPath.item < posts.count {
+            let profileImageUrl = posts[indexPath.item].user.profilePicture
+            let url = URL(string: profileImageUrl)
+            let image = UIImageView()
+            image.loadImage(from: url!)
+            cell.configure(image: image, name: name)
+        }
+        
+        
         return cell
     }
 
@@ -112,7 +137,7 @@ extension ShareBottomSheetViewController: UICollectionViewDataSource, UICollecti
 }
 
 class ProfileCell: UICollectionViewCell {
-    private let imageView = UIImageView()
+    private var imageView = UIImageView()
     private let nameLabel = UILabel()
 
     override init(frame: CGRect) {
@@ -146,8 +171,8 @@ class ProfileCell: UICollectionViewCell {
         ])
     }
 
-    func configure(image: UIImage?, name: String) {
-        imageView.image = image
+    func configure(image: UIImageView?, name: String) {
+        imageView.image = image?.image ?? UIImage(systemName: "person.circle")
         nameLabel.text = name
     }
 }
